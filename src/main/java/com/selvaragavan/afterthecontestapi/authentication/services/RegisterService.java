@@ -5,6 +5,7 @@ import com.selvaragavan.afterthecontestapi.authentication.dto.RegisterRequestDTO
 import com.selvaragavan.afterthecontestapi.authentication.dto.RegisterResponseDTO;
 import com.selvaragavan.afterthecontestapi.authentication.repositories.RegisterUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -20,6 +21,12 @@ public class RegisterService {
 
     @Autowired
     JWTService jwtService;
+
+    @Autowired
+    MailService mailService;
+
+    @Value("${spring.application.frontend-url}")
+    private String URL;
 
     public RegisterResponseDTO register(RegisterRequestDTO request) {
         String username = request.getUsername();
@@ -40,6 +47,10 @@ public class RegisterService {
         claims.put("password", password);
 
         String token = jwtService.generateToken(username,claims);
+        String subject = "AfterTheContest - Email verification";
+        String content = "<button href='"+ URL + token +"'> Click Here</button>";
+
+        mailService.sendEmail(email,subject,content);
 
         RegisteredUser user = new RegisteredUser(username, email, password, token);
         registerUserRepository.save(user);
