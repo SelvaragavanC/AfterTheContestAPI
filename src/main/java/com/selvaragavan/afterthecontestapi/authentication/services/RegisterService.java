@@ -7,6 +7,9 @@ import com.selvaragavan.afterthecontestapi.authentication.repositories.RegisterU
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class RegisterService {
     @Autowired
@@ -15,6 +18,8 @@ public class RegisterService {
     @Autowired
     RegisterUserRepository registerUserRepository;
 
+    @Autowired
+    JWTService jwtService;
 
     public RegisterResponseDTO register(RegisterRequestDTO request) {
         String username = request.getUsername();
@@ -29,8 +34,12 @@ public class RegisterService {
             return new RegisterResponseDTO("Email already exists");
         }
 
-        String token = "SummaToken"; // i should generate token
-        // I should write code to send token to email.
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("username", username);
+        claims.put("email", email);
+        claims.put("password", password);
+
+        String token = jwtService.generateToken(username,claims);
 
         RegisteredUser user = new RegisteredUser(username, email, password, token);
         registerUserRepository.save(user);
