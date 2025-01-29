@@ -4,10 +4,10 @@ import com.selvaragavan.afterthecontestapi.authentication.dto.RegisterRequestDTO
 import com.selvaragavan.afterthecontestapi.authentication.dto.RegisterResponseDTO;
 import com.selvaragavan.afterthecontestapi.authentication.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class RegisterController {
@@ -18,5 +18,10 @@ public class RegisterController {
     @PostMapping("/register")
     public RegisterResponseDTO registerUser(@RequestBody RegisterRequestDTO request) {
         return registerService.register(request);
+    }
+
+    @GetMapping("/register/verify")
+    public ResponseEntity<String> verifyUser(@RequestParam("token") String token) {
+        return new ResponseEntity<>(registerService.verify(token), HttpStatus.ACCEPTED);
     }
 }
