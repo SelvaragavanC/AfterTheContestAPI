@@ -16,8 +16,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> {
-//                    System.out.println((int)(1/0));
-                    customizer.requestMatchers("/register","/register/verify").permitAll();
+                    customizer.requestMatchers("/register","/register/verify","/login").permitAll();
                     customizer.anyRequest().authenticated();
                 })
                 .build();
