@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(customizer -> {
-                    customizer.requestMatchers("/register","/register/verify","/login").permitAll();
+                    customizer.requestMatchers("/register","/register/verify","/login" , "/content/get").permitAll();
                     customizer.anyRequest().authenticated();
                 })
                 .exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))

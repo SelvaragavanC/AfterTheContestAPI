@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service;
 public class CurrentUserService {
     public String getCurrentUserName(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth != null){return null;}
-        String name = auth.getName();
-        return name;
+        if(auth == null){return null;}
+        return auth.getName();
     }
 }
 

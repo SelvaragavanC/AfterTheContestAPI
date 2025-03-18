@@ -27,6 +27,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try{
+            System.out.println("JWTAuthenticationFilter Working FIne");
             String token = request.getHeader("Authorization");
 
             if(token == null || !token.startsWith("Bearer")) {
@@ -44,6 +45,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(auth); //auth object set so no problem.
+            System.out.println("Auth object is set");
             filterChain.doFilter(request, response);
         }catch(ExpiredJwtException e){
             doFilter(request, response, filterChain); // when token is expired and you're not going to register or login route, This throws a AccessDenied Exception.
