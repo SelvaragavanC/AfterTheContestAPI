@@ -44,15 +44,16 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(auth); //auth object set so no problem.
-
             filterChain.doFilter(request, response);
         }catch(ExpiredJwtException e){
+            doFilter(request, response, filterChain); // when token is expired and you're not going to register or login route, This throws a AccessDenied Exception.
+        }catch(Exception e){
             response.setStatus(401);
             response.setContentType("application/json");
 
             HashMap<String,String> mp = new HashMap<>();
-            mp.put("error","Expired JWT token");
-            mp.put("message","Your Session Expired, Please Login");
+            mp.put("error","Internal Server Error");
+            mp.put("message","Something went wrong in parsing your jwt token, Logout and continue");
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.writeValue(response.getWriter(),mp);

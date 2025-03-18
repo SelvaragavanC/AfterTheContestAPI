@@ -1,7 +1,8 @@
 package com.selvaragavan.afterthecontestapi.configurations;
 
 import com.selvaragavan.afterthecontestapi.authentication.filters.JWTAuthenticationFilter;
-import io.jsonwebtoken.Jwt;
+import com.selvaragavan.afterthecontestapi.exceptions.CustomAccessDeniedHandler;
+import com.selvaragavan.afterthecontestapi.exceptions.CustomAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,12 @@ public class SecurityConfig {
     @Autowired
     JWTAuthenticationFilter jwtAuthenticationFilter;
 
+    @Autowired
+    CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    @Autowired
+    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -27,6 +34,8 @@ public class SecurityConfig {
                     customizer.requestMatchers("/register","/register/verify","/login").permitAll();
                     customizer.anyRequest().authenticated();
                 })
+                .exceptionHandling(customizer -> customizer.accessDeniedHandler(customAccessDeniedHandler))
+                .exceptionHandling(customizer -> customizer.authenticationEntryPoint(customAuthenticationEntryPoint))
                 .build();
     }
 }
