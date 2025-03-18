@@ -15,7 +15,7 @@ public class LoginController {
     UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/login")
-    public LoginResponseDTO LoginController(@RequestBody LoginRequestDTO request) {
+    public LoginResponseDTO handleLogin(@RequestBody LoginRequestDTO request) {
         return userDetailsService.loginUser(request);
     }
 }
